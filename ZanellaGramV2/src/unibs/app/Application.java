@@ -48,7 +48,7 @@ public class Application {
 		{	
 			int i = mainMenu.scegli();
 			switch(i) {
-				case 0: //esci();
+				case 0: esciEsalva();
 					fine=true;
 					break;
 				case 1:vediEventi();
@@ -140,6 +140,11 @@ public class Application {
 		assegnaEvento(campi);
 		campi[GENERE]=new Campo<String>("Genere","Indica il genere dei giocatori",true);
 		campi[FASCIA_DI_ETA]=new Campo<FasciaDiEta>("Fascia di età","Indica la fascia di età dei giocatori",true);
+		
+	}
+	
+	public void esciEsalva()
+	{
 		
 	}
 		
