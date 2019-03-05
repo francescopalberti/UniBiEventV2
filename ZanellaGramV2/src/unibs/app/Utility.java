@@ -3,34 +3,21 @@ package unibs.app;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class MenuTest {
-	
-	private static String query;
-	private String titolo;
-	private String[] voci;
-	int dim;
-	
-	public MenuTest(String titolo, String[]voci, String query, int dim)
-	{
-		this.query=query;
-		this.dim=dim;
-		this.titolo=titolo;
-		this.voci=voci;
-	}
-	
-	public int scegli()
+public class Utility {
+		
+	public static int scegli(String titoloMain, String[] vociMain, String query, int dim)
 	{
 		System.out.println("________________________________________________");
-		System.out.println(titolo);
+		System.out.println(titoloMain);
 		System.out.println("________________________________________________");
 		for(int i=0;i<dim;i++) {
-			System.out.println(i+") "+voci[i]);
+			System.out.println(i+") "+vociMain[i]);
 		}
-		int a = leggi_intero();
+		int a = leggiIntero(query);
 		return a;
 	}
 	
-	public static int leggi_intero() 
+	public static int leggiIntero(String query) 
 	{
 		int scelta=0;
 		try {
@@ -39,11 +26,25 @@ public class MenuTest {
 			String line=in.nextLine();
 			scelta= Integer.parseInt(line);
 			
-			}catch(InputMismatchException e)
-				{
-					System.out.println("Errore di inserimento!");
-				}
+		}catch(InputMismatchException e)
+		{
+			System.out.println("Errore di inserimento!");
+		}
 		return scelta;
+	}
+	
+	public static String leggiStringa() 
+	{
+		String lettura = null;
+		try {
+			
+			Scanner in= new Scanner(System.in);
+			lettura=in.nextLine();
+		}catch(InputMismatchException e)
+		{
+			System.out.println("Errore di inserimento!");
+		}
+		return lettura;
 	}
 	
 	public static int sceltaDaLista(String messaggio, int dim) {
@@ -51,7 +52,7 @@ public class MenuTest {
 		int a;
 		do {
 			System.out.println(messaggio);
-			a = leggi_intero();
+			a = leggiIntero(messaggio);
 			if(a>dim){
 				System.out.println("Inserimento non valido!");
 			}else{

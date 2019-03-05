@@ -1,5 +1,6 @@
 package unibs.app;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Vector;
 
@@ -20,32 +21,29 @@ public class Application {
 	private static final int GENERE=12;
 	private static final int FASCIA_DI_ETA=13;
 	
-	private static MenuTest mainMenu;
 	private String[] categorie = {"Partite di calcio"};
 
 	private SpazioPersonale mioProfilo = new SpazioPersonale();
-	
+	private String titoloMain = "HOME";
 	private Vector<PartitaDiCalcio> listaPartite = new Vector<PartitaDiCalcio>();
-
+	private String[] vociMain = {"Esci e salva","Vedi eventi", "Crea evento", "Vedi profilo"};
+	
+	private Campo[] campi;
+	
 	public Application() {
 		initObjects();
 	}
 
 	private void initObjects() {
-		Campo[] campi = new Campo[14];
-		
-		String titoloMain = "HOME";
-		String[] vociMain = {"Esci e salva","Vedi eventi", "Crea evento", "Vedi profilo"};
-		
-		mainMenu = new MenuTest(titoloMain,vociMain,"Seleziona una voce",3);
-		
+		campi = new Campo[14];
+		assegnaPartitaDiCalcio(campi);
 	}
 	
 	public void runApplication() {
 		boolean fine=false;
 		while(!fine)
 		{	
-			int i = mainMenu.scegli();
+			int i = Utility.scegli(titoloMain,vociMain,"Seleziona una voce",3);
 			switch(i) {
 				case 0: //esci();
 					fine=true;
@@ -65,15 +63,75 @@ public class Application {
 
 
 	private void creaEvento() {
-		// TODO Auto-generated method stub
-		
+		vediCategorie();
+		int scelta= Utility.sceltaDaLista("Seleziona categoria (0 per tornare alla home)",categorie.length);
+		switch(scelta)
+		{
+			case 1: creaPartita();
+				break;
+			case 0: return;
+		}
 	}
 	
 	
+	private void creaPartita() {
+		for (int i = 0; i < campi.length; i++) {
+			System.out.println(toString());
+			switch (i)
+			{
+			   case NUMERO_PARTECIPANTI:
+			   case QUOTA:
+			      campi[i].setValore(Utility.leggiIntero(""));
+			      break;
+			   case TITOLO:
+			   case LUOGO:
+			   case COMPRESO_IN_QUOTA:
+			   case NOTE:
+			   case GENERE:
+				   campi[i].setValore(Utility.leggiStringa());
+			      break;
+			   case FASCIA_DI_ETA:
+				   FasciaDiEta fascia = new FasciaDiEta(Utility.leggiIntero("Min"), Utility.leggiIntero("Max"));
+				   campi[i].setValore(fascia);
+				      break;
+			   case TERMINE_ISCRIZIONI:
+			   case DATA:
+			   case DATA_CONCLUSIVA:
+				   Data date = new Data(Utility.leggiIntero("Giorno"), Utility.leggiIntero("Mese"), Utility.leggiIntero("Anno"));
+				   campi[i].setValore(date);
+				      break;
+			   case ORA:
+			   case DURATA:
+			   case ORA_CONCLUSIVA:
+				   Data orario = new Data(Utility.leggiIntero("Ora"), Utility.leggiIntero("Minuti"));
+				   campi[i].setValore(orario);
+				      break;
+			}
+		}
+		if(controlloCompilazione()){
+			PartitaDiCalcio unaPartita = new PartitaDiCalcio(Arrays.copyOfRange(campi, 0, 11), Arrays.copyOfRange(campi, 12, 13));
+			listaPartite.add(unaPartita);
+			mioProfilo.addEvento(unaPartita);
+		} else {
+			System.out.println("Non hai compilato alcuni campi obbligatori");
+		}
+	}
+	
+	public Boolean controlloCompilazione() {
+		for (int i = 0; i < campi.length; i++) {
+			if(campi[i].isObbligatorio()) {
+				if(campi[i].getValore()==null) return false;
+			}
+		}
+		return true;
+		
+	}
+
 	public void vediEventi()
 	{
-		MenuTest menuCat = new MenuTest("Categorie",categorie,"Seleziona categoria (0 per tornare alla home)",1);
-		int scelta= menuCat.scegli();
+		vediCategorie();
+		//Utility menuCat = new Utility("Categorie",categorie,"Seleziona categoria (0 per tornare alla home)",1);
+		int scelta= Utility.sceltaDaLista("Seleziona categoria (0 per tornare alla home)",categorie.length);
 		switch(scelta)
 		{
 			case 1: vediPartite();
@@ -82,10 +140,17 @@ public class Application {
 		}
 	}
 	
+	public void vediCategorie()
+	{
+		for (int i = 0; i < categorie.length; i++) {
+			System.out.println(i+1 + ") " + categorie[i]);
+		}
+	}
+	
 	public void vediPartite()
 	{
 		for(int i=0; i<listaPartite.size(); i++) System.out.println(i+1 + ") " +listaPartite.get(i).getDescrizioneCampi());
-		int a = MenuTest.sceltaDaLista("Seleziona partita a cui vuoi aderire (0 per uscire):", listaPartite.size());
+		int a = Utility.sceltaDaLista("Seleziona partita a cui vuoi aderire (0 per uscire):", listaPartite.size());
 		
 			if(a==0) return;
 			else{
@@ -102,7 +167,7 @@ public class Application {
 		}else {
 			mioProfilo.stampaNotifiche();
 			do {
-				a = MenuTest.sceltaDaLista("Seleziona notifica che vuoi eliminare (0 per uscire):", mioProfilo.getNumeroNotifiche());
+				a = Utility.sceltaDaLista("Seleziona notifica che vuoi eliminare (0 per uscire):", mioProfilo.getNumeroNotifiche());
 				if(a==0) return;
 				else{
 					mioProfilo.deleteNotifica(a-1); 

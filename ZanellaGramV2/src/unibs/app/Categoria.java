@@ -19,11 +19,11 @@ public class Categoria {
 	private static final int DATA_CONCLUSIVA=9;
 	private static final int ORA_CONCLUSIVA=10;
 	private static final int NOTE=11;
-	private Campo[] campiBase;
+	private Campo[] campiBase = new Campo[12];
 	private int partecipantiAttuali;
 	
-	public Categoria(String _nome, String _descrizione) {
-		campiBase = new Campo[12];
+	public Categoria(String _nome, String _descrizione, Campo[] _campiBase) {
+		campiBase = _campiBase;
 		nome=_nome;
 		descrizione=_descrizione;
 		partecipantiAttuali=1;

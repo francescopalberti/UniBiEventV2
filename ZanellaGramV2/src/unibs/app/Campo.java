@@ -32,7 +32,7 @@ public class Campo<T> {
 		this.descrizione = descrizione;
 	}
 
-	public boolean isObbligatorietà() {
+	public boolean isObbligatorio() {
 		return obbligatorietà;
 	}
 

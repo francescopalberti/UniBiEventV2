@@ -6,11 +6,11 @@ public class PartitaDiCalcio extends Categoria{
 	private static final int FASCIA_DI_ETA=13;
 	private static final String descrizione = "Una partita di calcio";
 	private static final String nome = "Partita di Calcio";
-	private Campo[] campiSpecifici;
+	private Campo[] campiSpecifici = new Campo[2];
 
-	public PartitaDiCalcio() {
-		super(nome, descrizione);
-		campiSpecifici = new Campo[2];
+	public PartitaDiCalcio(Campo[] _campiGenerici, Campo[] _campiSpecifici) {
+		super(nome, descrizione, _campiGenerici);
+		campiSpecifici = _campiSpecifici;
 	}
 
 	public Campo[] getCampiSpecifici() {
