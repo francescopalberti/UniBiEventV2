@@ -3,7 +3,7 @@ package unibs.app;
 import java.util.Date;
 import java.util.Vector;
 
-//ciao
+//ciaoo
 public class Application {
 	private static final int TITOLO=0;
 	private static final int NUMERO_PARTECIPANTI=1;
