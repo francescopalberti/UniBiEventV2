@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Vector;
 
+//ciaoo
 public class Application {
 	private static final int TITOLO=0;
 	private static final int NUMERO_PARTECIPANTI=1;
@@ -45,7 +46,7 @@ public class Application {
 		{	
 			int i = Utility.scegli(titoloMain,vociMain,"Seleziona una voce",3);
 			switch(i) {
-				case 0: //esci();
+				case 0: esciEsalva();
 					fine=true;
 					break;
 				case 1:vediEventi();
@@ -204,6 +205,11 @@ public class Application {
 		assegnaEvento(campi);
 		campi[GENERE]=new Campo<String>("Genere","Indica il genere dei giocatori",true);
 		campi[FASCIA_DI_ETA]=new Campo<FasciaDiEta>("Fascia di età","Indica la fascia di età dei giocatori",true);
+		
+	}
+	
+	public void esciEsalva()
+	{
 		
 	}
 		
