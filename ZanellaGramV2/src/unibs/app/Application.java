@@ -1,11 +1,16 @@
 package unibs.app;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Vector;
 
-//ciaoo
+
 public class Application {
+	//immettere percorso esatto in cui si vogliono salvare i file
+	public static String pathProfilo = "C:\\Users\\zenry\\eclipse-workspace...";
+	public static String pathPartite = "C:\\Users\\zenry\\eclipse-workspace...";
+	
 	private static final int TITOLO=0;
 	private static final int NUMERO_PARTECIPANTI=1;
 	private static final int TERMINE_ISCRIZIONI=2;
@@ -24,30 +29,47 @@ public class Application {
 	
 	private String[] categorie = {"Partite di calcio"};
 
-	private SpazioPersonale mioProfilo = new SpazioPersonale();
+	private SpazioPersonale mioProfilo;
 	private String titoloMain = "HOME";
-	private Vector<PartitaDiCalcio> listaPartite = new Vector<PartitaDiCalcio>();
+	private Vector<PartitaDiCalcio> listaPartite;
 	private String[] vociMain = {"Esci e salva","Vedi eventi", "Crea evento", "Vedi profilo"};
 	
 	private Campo[] campi;
 	
-	public Application() {
+	public Application() throws ClassNotFoundException, IOException {
 		initObjects();
 	}
 
-	private void initObjects() {
+	private void initObjects() throws ClassNotFoundException, IOException {
 		campi = new Campo[14];
 		assegnaPartitaDiCalcio(campi);
+		
+		//caricamento oggetti
+		if(new File(pathProfilo).exists())mioProfilo=(SpazioPersonale)caricaOggetto(pathProfilo);
+		else mioProfilo = new SpazioPersonale();
+		
+		if(new File(pathPartite).exists())listaPartite=(Vector<PartitaDiCalcio>)caricaOggetto(pathPartite);
+		else listaPartite = new Vector<PartitaDiCalcio>();
 	}
 	
-	public void runApplication() {
+	public Object caricaOggetto(String path) throws ClassNotFoundException, IOException
+	{
+		FileInputStream in = new FileInputStream(new File(path));
+		ObjectInputStream objectIn=new ObjectInputStream(in);
+		Object result=objectIn.readObject();
+		objectIn.close();
+		return result;
+	}
+	
+	
+	
+	public void runApplication() throws IOException {
 		boolean fine=false;
 		while(!fine)
 		{	
 			int i = Utility.scegli(titoloMain,vociMain,"Seleziona una voce",3);
 			switch(i) {
-				case 0: esciEsalva();
-					fine=true;
+				case 0: {fine=true; esciEsalva();}
 					break;
 				case 1:vediEventi();
 					break;
@@ -208,10 +230,18 @@ public class Application {
 		
 	}
 	
-	public void esciEsalva()
+	public void esciEsalva() throws IOException
 	{
+		System.out.println("Salvataggio...");
 		
+		ObjectOutputStream writerPartite=new ObjectOutputStream(new FileOutputStream(new File(pathPartite)));
+		writerPartite.writeObject(listaPartite);
+		writerPartite.close();
+		
+		ObjectOutputStream writerProfilo=new ObjectOutputStream(new FileOutputStream(new File(pathProfilo)));
+		writerProfilo.writeObject(listaPartite);
+		writerProfilo.close();
 	}
-		
+
 		
 }
