@@ -17,6 +17,8 @@ public class Categoria {
 	private static final int ORA_CONCLUSIVA=10;
 	private static final int NOTE=11;
 	
+	private static final String lineSeparator="\n";
+	
 	private String nome;
 	private String descrizione;
 	private Boolean chiuso;
@@ -74,10 +76,29 @@ public class Categoria {
 		if (partecipantiAttuali>(int)campiBase[NUMERO_PARTECIPANTI].getValore()) {
 			chiuso=true;	
 			for (SpazioPersonale profilo : listaPartecipanti) {
-				profilo.addNotifica("L'evento "+ campiBase[TITOLO].getValore() +" ha raggiunto il numero massimo di partecipanti.");
+				profilo.addNotifica("L'evento "+ campiBase[TITOLO].getValore() +" si svolgerà.\n");
 			}
 		}
 		
+	}
+	
+	public String infoChiusura() {
+		StringBuffer s = new StringBuffer();
+		s.append("L'evento "+ campiBase[TITOLO].getValore() +" si svolgerà.");
+		s.append(lineSeparator);
+		s.append("Data: "+ campiBase[DATA].getValore());
+		s.append(lineSeparator);
+		s.append("Ora: "+ campiBase[ORA].getValore());
+		s.append(lineSeparator);
+		s.append("Luogo: "+ campiBase[LUOGO].getValore());
+		s.append(lineSeparator);
+		s.append("Importo dovuto: "+ campiBase[QUOTA].getValore());
+		s.append(lineSeparator);
+		return s.toString();	
+	}
+	
+	public boolean isAperto() {
+		return (!chiuso && !fallito && !concluso);
 	}
 	
 	

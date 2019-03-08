@@ -173,12 +173,18 @@ public class Application {
 	
 	public void vediPartite()
 	{
-		for(int i=0; i<listaPartite.size(); i++) System.out.println(i+1 + ") " +listaPartite.get(i).getDescrizioneCampi());
-		int a = Utility.sceltaDaLista("Seleziona partita a cui vuoi aderire (0 per uscire):", listaPartite.size());
+		Vector<PartitaDiCalcio> disponibili = new Vector<PartitaDiCalcio>();
+		
+		for(PartitaDiCalcio p:listaPartite) {
+			if(!mioProfilo.isPartecipante(p) && p.isAperto())disponibili.add(p);
+		}
+		
+		for(int i=0; i<disponibili.size(); i++) System.out.println(i+1 + ") " +disponibili.get(i).getDescrizioneCampi());
+		int a = Utility.sceltaDaLista("Seleziona partita a cui vuoi aderire (0 per uscire):", disponibili.size());
 		
 			if(a==0) return;
 			else{
-				partecipaEvento(listaPartite.get(a));
+				partecipaEvento(disponibili.get(a));
 			}	
 	}
 	
@@ -211,15 +217,15 @@ public class Application {
 	{
 		campi[TITOLO]= new Campo<String>("Titolo","Titolo dell'evento",false);
 		campi[NUMERO_PARTECIPANTI]=new Campo<Integer>("Numero partecipanti","Indica il numero massimo di partecipanti",true);
-		campi[TERMINE_ISCRIZIONI]=new Campo<Date>("Data termine iscrizione","Indica la data limite entro cui iscriversi",true);
+		campi[TERMINE_ISCRIZIONI]=new Campo<Data>("Data termine iscrizione","Indica la data limite entro cui iscriversi",true);
 		campi[LUOGO]=new Campo<String>("Luogo","Indica il luogo dell'evento",true);
-		campi[DATA]=new Campo<Date>("Data","Indica la data di svolgimento dell'evento",true);
-		campi[ORA]=new Campo<Date>("Ora","Indica l'ora di inizio dell'evento",true);
-		campi[DURATA]=new Campo<Date>("Durata","Indica la durata dell'evento",false);
+		campi[DATA]=new Campo<Data>("Data","Indica la data di svolgimento dell'evento",true);
+		campi[ORA]=new Campo<Data>("Ora","Indica l'ora di inizio dell'evento",true);
+		campi[DURATA]=new Campo<Data>("Durata","Indica la durata dell'evento",false);
 		campi[QUOTA]=new Campo<Integer>("Numero partecipanti","Indica la spesa da sostenere per partecipare all'evento",true);
 		campi[COMPRESO_IN_QUOTA]=new Campo<String>("Compreso in quota","Indica le voci di spesa comprese nella quota",false);
-		campi[DATA_CONCLUSIVA]=new Campo<Date>("Data conclusiva","Indica la data di conclusione dell'evento",false);
-		campi[ORA_CONCLUSIVA]=new Campo<Date>("Ora conclusiva","Indica l'ora conclusiva dell'evento",false);
+		campi[DATA_CONCLUSIVA]=new Campo<Data>("Data conclusiva","Indica la data di conclusione dell'evento",false);
+		campi[ORA_CONCLUSIVA]=new Campo<Data>("Ora conclusiva","Indica l'ora conclusiva dell'evento",false);
 		campi[NOTE]=new Campo<String>("Note","Informazioni aggiuntive",false);		
 	}
 	

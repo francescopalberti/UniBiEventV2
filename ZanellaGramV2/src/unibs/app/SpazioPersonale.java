@@ -20,6 +20,10 @@ public class SpazioPersonale {
 		eventi.add(evento);
 	}
 	
+	public Vector<Categoria> getEventi(){
+		return eventi;
+	}
+	
 	/**
 	 * @return false se non c'è l'evento nel vector
 	 */
@@ -63,5 +67,12 @@ public class SpazioPersonale {
 
 	public int getNumeroNotifiche() {
 		return notifiche.size();
+	}
+
+
+	public boolean isPartecipante(Categoria evento) {
+		for(Categoria c: eventi)
+			if(evento.equals(c)) return true;
+		return false;
 	}
 }

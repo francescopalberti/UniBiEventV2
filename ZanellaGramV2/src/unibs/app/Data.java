@@ -60,5 +60,13 @@ public class Data {
 		
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Data [giorno=" + giorno + ", mese=" + mese + ", anno=" + anno + ", ora=" + ora + ", minuti=" + minuti
+				+ "]";
+	}
+	
+	
 	
 }

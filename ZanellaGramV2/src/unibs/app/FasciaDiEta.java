@@ -32,5 +32,9 @@ public class FasciaDiEta {
 	public void setMax(int et‡Massima) {
 		this.et‡Massima = et‡Massima;
 	}
+	
+	public String toString() {
+		return et‡Minima + " - " + et‡Massima;
+	}
 
 }
