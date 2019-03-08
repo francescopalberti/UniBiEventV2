@@ -1,12 +1,9 @@
 package unibs.app;
 
 import java.util.Date;
+import java.util.Vector;
 
 public class Categoria {
-	
-	private static String nome;
-	private static String descrizione;
-	
 	private static final int TITOLO=0;
 	private static final int NUMERO_PARTECIPANTI=1;
 	private static final int TERMINE_ISCRIZIONI=2;
@@ -19,14 +16,27 @@ public class Categoria {
 	private static final int DATA_CONCLUSIVA=9;
 	private static final int ORA_CONCLUSIVA=10;
 	private static final int NOTE=11;
+	
+	private String nome;
+	private String descrizione;
+	private Boolean chiuso;
+	private Boolean fallito;
+	private Boolean concluso;
 	private Campo[] campiBase = new Campo[12];
 	private int partecipantiAttuali;
+	private Vector<SpazioPersonale> listaPartecipanti;
+	
+	
+	
 	
 	public Categoria(String _nome, String _descrizione, Campo[] _campiBase) {
 		campiBase = _campiBase;
 		nome=_nome;
 		descrizione=_descrizione;
 		partecipantiAttuali=1;
+		chiuso=false;
+		fallito=false;
+		concluso=false;
 	}
 
 	public String getNome() {
@@ -53,7 +63,22 @@ public class Categoria {
 		return S;
 	}
 	
-	public void aggiungiPartecipante() {
+	public void aggiungiPartecipante(SpazioPersonale partecipante) {
 		partecipantiAttuali++;
+		listaPartecipanti.add(partecipante);
+		controlloChiusura();
+		
 	}
+
+	private void controlloChiusura() {
+		if (partecipantiAttuali>(int)campiBase[NUMERO_PARTECIPANTI].getValore()) {
+			chiuso=true;	
+			for (SpazioPersonale profilo : listaPartecipanti) {
+				profilo.addNotifica("L'evento "+ campiBase[TITOLO].getValore() +" ha raggiunto il numero massimo di partecipanti.");
+			}
+		}
+		
+	}
+	
+	
 }

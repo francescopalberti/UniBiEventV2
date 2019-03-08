@@ -69,7 +69,8 @@ public class Application {
 		{	
 			int i = Utility.scegli(titoloMain,vociMain,"Seleziona una voce",3);
 			switch(i) {
-				case 0: {fine=true; esciEsalva();}
+				case 0: {fine=true;
+					esciEsalva();}
 					break;
 				case 1:vediEventi();
 					break;
@@ -200,7 +201,7 @@ public class Application {
 	}
 	
 	private void partecipaEvento(Categoria evento) {
-		evento.aggiungiPartecipante();
+		evento.aggiungiPartecipante(mioProfilo);
 		mioProfilo.addEvento(evento);
 	}
 	
