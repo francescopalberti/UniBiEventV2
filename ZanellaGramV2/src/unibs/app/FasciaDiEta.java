@@ -3,33 +3,38 @@ package unibs.app;
 //
 public class FasciaDiEta {
 	
-	private int et‡Minima;
-	private int et‡Massima;
+	private Integer et‡Minima;
+	private Integer et‡Massima;
 	
-	public FasciaDiEta(int min,int max) {
-		if(min<max){
-			this.et‡Minima=min;
-		    this.et‡Massima=max;
-		}
-		else {
-			this.et‡Massima=min;
-			this.et‡Minima=max;
+	public FasciaDiEta(Integer min, Integer max) {
+		if (min==null||max==null) {
+			min=null;
+			max=null;
+		} else {
+			if(min<max){
+				this.et‡Minima=min;
+			    this.et‡Massima=max;
+			}
+			else {
+				this.et‡Massima=min;
+				this.et‡Minima=max;
+			}
 		}
 	}
 
-	public int getMin() {
+	public Integer getMin() {
 		return et‡Minima;
 	}
 
-	public void setMin(int et‡Minima) {
+	public void setMin(Integer et‡Minima) {
 		this.et‡Minima = et‡Minima;
 	}
 
-	public int getMax() {
+	public Integer getMax() {
 		return et‡Massima;
 	}
 
-	public void setMax(int et‡Massima) {
+	public void setMax(Integer et‡Massima) {
 		this.et‡Massima = et‡Massima;
 	}
 	

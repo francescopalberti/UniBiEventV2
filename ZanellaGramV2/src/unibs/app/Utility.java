@@ -17,16 +17,19 @@ public class Utility {
 		return a;
 	}
 	
-	public static int leggiIntero(String query) 
+	public static Integer leggiIntero(String query) 
 	{
-		int scelta=0;
+		Integer scelta=null;
 		try {
 			System.out.println(query + " -->");
 			Scanner in= new Scanner(System.in);
 			String line=in.nextLine();
-			scelta= Integer.parseInt(line);
-			
-		}catch(InputMismatchException e)
+			if (!line.equals("")) {
+				scelta = Integer.parseInt(line);
+			} else {
+				scelta=null; 
+			}
+			}catch(InputMismatchException e)
 		{
 			System.out.println("Errore di inserimento!");
 		}

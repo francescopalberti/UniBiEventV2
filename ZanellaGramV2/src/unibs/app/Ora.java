@@ -2,19 +2,19 @@ package unibs.app;
 
 public class Ora {
 	
-	private int ora;
-	private int minuti;
+	private Integer ora;
+	private Integer minuti;
 	
-	public Ora(int ora, int minuti) {
+	public Ora(Integer ora, Integer minuti) {
 		this.ora=ora;
 		this.minuti=minuti;
 	}
 
-	public int getOra() {
+	public Integer getOra() {
 		return ora;
 	}
 
-	public int getMinuti() {
+	public Integer getMinuti() {
 		return minuti;
 	}
 	
@@ -23,13 +23,12 @@ public class Ora {
 		else {
 			if (o.getMinuti()<minuti) return false;
 		}
-		
 		return true;
 	}
 	
 	@Override
 	public String toString() {
-		return "Ora: " + ora + ":" + minuti;
+		return ora + ":" + minuti;
 	}
 	
 	

@@ -167,12 +167,15 @@ public class Application {
 		int scelta= Utility.sceltaDaLista("Seleziona categoria (0 per tornare alla home)",categorie.length);
 		switch(scelta)
 		{
-			case 1: vediPartite();
+			case 1: vediPartite(getPartiteDisponibili());
+					scegliPartita(getPartiteDisponibili());
 				break;
 			case 0: return;
 		}
 	}
 	
+	
+
 	public void vediCategorie()
 	{
 		for (int i = 0; i < categorie.length; i++) {
@@ -180,24 +183,40 @@ public class Application {
 		}
 	}
 	
-	public void vediPartite()
-	{
+	private Vector<PartitaDiCalcio> getPartiteDisponibili(){
 		Vector<PartitaDiCalcio> disponibili = new Vector<PartitaDiCalcio>();
-		
 		for(PartitaDiCalcio p:listaPartite) {
-			if(mioProfilo.isPartecipante(p) && p.isAperto())disponibili.add(p);
+			if(!mioProfilo.isPartecipante(p) && p.isAperto()) disponibili.add(p);
 		}
 		
-		for(int i=0; i<disponibili.size(); i++) System.out.println(i+1 + ") " +disponibili.get(i).getDescrizioneCampi());
+		return disponibili;
+	}
+	
+	public void vediPartite(Vector<PartitaDiCalcio> disponibili)
+	{
+		for(int i=0; i<disponibili.size(); i++) { 
+			System.out.println("Partita "+ (i+1));
+			for (int j = 0; j < disponibili.get(i).getCampiBase().length; j++) {
+				System.out.println("   " + disponibili.get(i).getCampiBase()[j].toStringValore());
+			}
+			for (int j = 0; j < disponibili.get(i).getCampiSpecifici().length; j++) {
+				System.out.println("   " + disponibili.get(i).getCampiSpecifici()[j].toStringValore());
+			}
+		}
+		
+		
+		
+	}
+	
+	private void scegliPartita(Vector<PartitaDiCalcio> disponibili) {
 		int a = Utility.sceltaDaLista("Seleziona partita a cui vuoi aderire (0 per uscire):", disponibili.size());
 		
 			if(a==0) return;
 			else{
 				partecipaEvento(disponibili.get(a));
 			}	
+		
 	}
-	
-	
 	
 	private void visualizzaSpazioPersonale() {
 		int a;

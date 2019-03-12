@@ -1,9 +1,9 @@
 package unibs.app;
 
 public class Data {
-	private int giorno, mese, anno;
+	private Integer giorno, mese, anno;
 
-public Data(int gg, int mm, int yy) {
+public Data(Integer gg, Integer mm, Integer yy) {
 		this.giorno = gg;
 		this.mese = mm;
 		this.anno = yy;
@@ -12,21 +12,21 @@ public Data(int gg, int mm, int yy) {
 	/**
 	 * @return the giorno
 	 */
-	public int getGiorno() {
+	public Integer getGiorno() {
 		return giorno;
 	}
 
 	/**
 	 * @return the mese
 	 */
-	public int getMese() {
+	public Integer getMese() {
 		return mese;
 	}
 
 	/**
 	 * @return the anno
 	 */
-	public int getAnno() {
+	public Integer getAnno() {
 		return anno;
 	}
 
@@ -44,7 +44,7 @@ public Data(int gg, int mm, int yy) {
 
 	@Override
 	public String toString() {
-		return "Data: Giorno= " + giorno + ", Mese= " + mese + ", Anno= " + anno;
+		return giorno + "/" + mese + "/" + anno;
 	}
 	
 	

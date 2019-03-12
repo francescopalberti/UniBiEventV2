@@ -24,7 +24,7 @@ public class Categoria {
 	private Boolean chiuso;
 	private Boolean fallito;
 	private Boolean concluso;
-	private Campo[] campiBase = new Campo[12];
+	private Campo[] campiBase;
 	private int partecipantiAttuali;
 	private Vector<SpazioPersonale> listaPartecipanti;
 	
@@ -32,6 +32,7 @@ public class Categoria {
 	
 	
 	public Categoria(String _nome, String _descrizione, Campo[] _campiBase) {
+		campiBase = new Campo[12];
 		campiBase = _campiBase;
 		nome=_nome;
 		descrizione=_descrizione;
@@ -83,8 +84,6 @@ public class Categoria {
 	}
 	
 	public boolean aggiornaStato(Data dataOdierna) {
-		
-		
 		controlloChiusura();
 		
 		Data dataScadenza = (Data) campiBase[TERMINE_ISCRIZIONI].getValore();
