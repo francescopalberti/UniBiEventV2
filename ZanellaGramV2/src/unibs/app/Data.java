@@ -1,17 +1,12 @@
 package unibs.app;
 
 public class Data {
-	private int giorno, mese, anno, ora, minuti;
+	private int giorno, mese, anno;
 
-	public Data(int gg, int mm, int yy) {
+public Data(int gg, int mm, int yy) {
 		this.giorno = gg;
 		this.mese = mm;
 		this.anno = yy;
-	}
-
-	public Data(int hh, int min) {
-		this.ora = hh;
-		this.minuti = min;
 	}
 	
 	/**
@@ -35,20 +30,6 @@ public class Data {
 		return anno;
 	}
 
-	/**
-	 * @return the ora
-	 */
-	public int getOra() {
-		return ora;
-	}
-
-	/**
-	 * @return the minuti
-	 */
-	public int getMinuti() {
-		return minuti;
-	}
-
 	public Boolean isPrecedente(Data unaData) {
 		if (unaData.getAnno()<anno) return false;
 		else {
@@ -63,8 +44,7 @@ public class Data {
 
 	@Override
 	public String toString() {
-		return "Data [giorno=" + giorno + ", mese=" + mese + ", anno=" + anno + ", ora=" + ora + ", minuti=" + minuti
-				+ "]";
+		return "Data: Giorno= " + giorno + ", Mese= " + mese + ", Anno= " + anno;
 	}
 	
 	

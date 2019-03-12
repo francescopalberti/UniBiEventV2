@@ -68,20 +68,53 @@ public class Categoria {
 	public void aggiungiPartecipante(SpazioPersonale partecipante) {
 		partecipantiAttuali++;
 		listaPartecipanti.add(partecipante);
-		controlloChiusura();
+		
 		
 	}
 
 	private void controlloChiusura() {
-		if (partecipantiAttuali>(int)campiBase[NUMERO_PARTECIPANTI].getValore()) {
+		if (partecipantiAttuali>=(int)campiBase[NUMERO_PARTECIPANTI].getValore()) {
 			chiuso=true;	
 			for (SpazioPersonale profilo : listaPartecipanti) {
-				profilo.addNotifica("L'evento "+ campiBase[TITOLO].getValore() +" si svolgerà.\n");
+				profilo.addNotifica(infoChiusura());
 			}
 		}
 		
 	}
 	
+	public boolean aggiornaStato(Data dataOdierna) {
+		
+		
+		controlloChiusura();
+		
+		Data dataScadenza = (Data) campiBase[TERMINE_ISCRIZIONI].getValore();
+		if (dataScadenza.isPrecedente(dataOdierna) && (partecipantiAttuali < (int) campiBase[NUMERO_PARTECIPANTI].getValore())) {
+			fallito=true;
+			for (SpazioPersonale profilo : listaPartecipanti) {
+				profilo.addNotifica(infoFallimento());
+			}
+		}
+		
+		Data dataConclusiva;
+		if (campiBase[DATA_CONCLUSIVA].getValore()!=null) {
+			dataConclusiva = (Data) campiBase[DATA_CONCLUSIVA].getValore();
+		} else {
+			dataConclusiva = (Data) campiBase[DATA].getValore();
+		}
+		
+		if (dataConclusiva.isPrecedente(dataOdierna) && !fallito) {
+			concluso=true;
+		}
+		return concluso || fallito || chiuso;
+	}
+	
+	private String infoFallimento() {
+		StringBuffer s = new StringBuffer();
+		s.append("L'evento "+ campiBase[TITOLO].getValore() +" è fallito. ");
+		s.append(lineSeparator);
+		return s.toString();
+	}
+
 	public String infoChiusura() {
 		StringBuffer s = new StringBuffer();
 		s.append("L'evento "+ campiBase[TITOLO].getValore() +" si svolgerà.");

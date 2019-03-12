@@ -47,11 +47,24 @@ public class Utility {
 		return lettura;
 	}
 	
+	public static String leggiStringa(String messaggio) 
+	{
+		String lettura = null;
+		try {
+			System.out.println(messaggio + " -->");
+			Scanner in= new Scanner(System.in);
+			lettura=in.nextLine();
+		}catch(InputMismatchException e)
+		{
+			System.out.println("Errore di inserimento!");
+		}
+		return lettura;
+	}
+	
 	public static int sceltaDaLista(String messaggio, int dim) {
 		boolean fine = false;
 		int a;
 		do {
-			System.out.println(messaggio);
 			a = leggiIntero(messaggio);
 			if(a>dim){
 				System.out.println("Inserimento non valido!");

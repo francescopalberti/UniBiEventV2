@@ -28,7 +28,8 @@ public class Application {
 	private static final int FASCIA_DI_ETA=13;
 	
 	private String[] categorie = {"Partite di calcio"};
-
+	private Data dataOdierna;
+	private Ora oraAttuale;
 	private SpazioPersonale mioProfilo;
 	private String titoloMain = "HOME";
 	private Vector<PartitaDiCalcio> listaPartite;
@@ -36,8 +37,10 @@ public class Application {
 	
 	private Campo[] campi;
 	
-	public Application() throws ClassNotFoundException, IOException {
+	public Application(Data dataOdierna, Ora oraAttuale) throws ClassNotFoundException, IOException {
 		initObjects();
+		this.dataOdierna=dataOdierna;
+		this.oraAttuale=oraAttuale;
 	}
 
 	private void initObjects() throws ClassNotFoundException, IOException {
@@ -64,10 +67,11 @@ public class Application {
 	
 	
 	public void runApplication() throws IOException {
+		controlloEventi();
 		boolean fine=false;
 		while(!fine)
 		{	
-			int i = Utility.scegli(titoloMain,vociMain,"Seleziona una voce",3);
+			int i = Utility.scegli(titoloMain,vociMain,"Seleziona una voce",4);
 			switch(i) {
 				case 0: {fine=true;
 					esciEsalva();}
@@ -86,6 +90,12 @@ public class Application {
 	}
 
 
+	private void controlloEventi() {
+		for (Categoria evento : listaPartite) {
+			if(evento.aggiornaStato(dataOdierna)) listaPartite.remove(evento);
+		}
+	}
+
 	private void creaEvento() {
 		vediCategorie();
 		int scelta= Utility.sceltaDaLista("Seleziona categoria (0 per tornare alla home)",categorie.length);
@@ -100,7 +110,7 @@ public class Application {
 	
 	private void creaPartita() {
 		for (int i = 0; i < campi.length; i++) {
-			System.out.println(toString());
+			System.out.print(campi[i].toString());
 			switch (i)
 			{
 			   case NUMERO_PARTECIPANTI:
@@ -112,22 +122,22 @@ public class Application {
 			   case COMPRESO_IN_QUOTA:
 			   case NOTE:
 			   case GENERE:
-				   campi[i].setValore(Utility.leggiStringa());
+				   campi[i].setValore(Utility.leggiStringa(""));
 			      break;
 			   case FASCIA_DI_ETA:
-				   FasciaDiEta fascia = new FasciaDiEta(Utility.leggiIntero("Min"), Utility.leggiIntero("Max"));
+				   FasciaDiEta fascia = new FasciaDiEta(Utility.leggiIntero("\nEtà min"), Utility.leggiIntero("Età max"));
 				   campi[i].setValore(fascia);
 				      break;
 			   case TERMINE_ISCRIZIONI:
 			   case DATA:
 			   case DATA_CONCLUSIVA:
-				   Data date = new Data(Utility.leggiIntero("Giorno"), Utility.leggiIntero("Mese"), Utility.leggiIntero("Anno"));
+				   Data date = new Data(Utility.leggiIntero("\nGiorno"), Utility.leggiIntero("Mese"), Utility.leggiIntero("Anno"));
 				   campi[i].setValore(date);
 				      break;
 			   case ORA:
 			   case DURATA:
 			   case ORA_CONCLUSIVA:
-				   Data orario = new Data(Utility.leggiIntero("Ora"), Utility.leggiIntero("Minuti"));
+				   Ora orario = new Ora(Utility.leggiIntero("\nOra"), Utility.leggiIntero("Minuti"));
 				   campi[i].setValore(orario);
 				      break;
 			}
@@ -154,7 +164,6 @@ public class Application {
 	public void vediEventi()
 	{
 		vediCategorie();
-		//Utility menuCat = new Utility("Categorie",categorie,"Seleziona categoria (0 per tornare alla home)",1);
 		int scelta= Utility.sceltaDaLista("Seleziona categoria (0 per tornare alla home)",categorie.length);
 		switch(scelta)
 		{
@@ -176,7 +185,7 @@ public class Application {
 		Vector<PartitaDiCalcio> disponibili = new Vector<PartitaDiCalcio>();
 		
 		for(PartitaDiCalcio p:listaPartite) {
-			if(!mioProfilo.isPartecipante(p) && p.isAperto())disponibili.add(p);
+			if(mioProfilo.isPartecipante(p) && p.isAperto())disponibili.add(p);
 		}
 		
 		for(int i=0; i<disponibili.size(); i++) System.out.println(i+1 + ") " +disponibili.get(i).getDescrizioneCampi());
@@ -209,6 +218,7 @@ public class Application {
 	private void partecipaEvento(Categoria evento) {
 		evento.aggiungiPartecipante(mioProfilo);
 		mioProfilo.addEvento(evento);
+		controlloEventi();
 	}
 	
 	
@@ -220,12 +230,12 @@ public class Application {
 		campi[TERMINE_ISCRIZIONI]=new Campo<Data>("Data termine iscrizione","Indica la data limite entro cui iscriversi",true);
 		campi[LUOGO]=new Campo<String>("Luogo","Indica il luogo dell'evento",true);
 		campi[DATA]=new Campo<Data>("Data","Indica la data di svolgimento dell'evento",true);
-		campi[ORA]=new Campo<Data>("Ora","Indica l'ora di inizio dell'evento",true);
-		campi[DURATA]=new Campo<Data>("Durata","Indica la durata dell'evento",false);
-		campi[QUOTA]=new Campo<Integer>("Numero partecipanti","Indica la spesa da sostenere per partecipare all'evento",true);
+		campi[ORA]=new Campo<Ora>("Ora","Indica l'ora di inizio dell'evento",true);
+		campi[DURATA]=new Campo<Ora>("Durata","Indica la durata dell'evento",false);
+		campi[QUOTA]=new Campo<Integer>("Quota iscrizione","Indica la spesa da sostenere per partecipare all'evento",true);
 		campi[COMPRESO_IN_QUOTA]=new Campo<String>("Compreso in quota","Indica le voci di spesa comprese nella quota",false);
 		campi[DATA_CONCLUSIVA]=new Campo<Data>("Data conclusiva","Indica la data di conclusione dell'evento",false);
-		campi[ORA_CONCLUSIVA]=new Campo<Data>("Ora conclusiva","Indica l'ora conclusiva dell'evento",false);
+		campi[ORA_CONCLUSIVA]=new Campo<Ora>("Ora conclusiva","Indica l'ora conclusiva dell'evento",false);
 		campi[NOTE]=new Campo<String>("Note","Informazioni aggiuntive",false);		
 	}
 	

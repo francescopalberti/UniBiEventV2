@@ -26,5 +26,12 @@ public class Ora {
 		
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return "Ora: " + ora + ":" + minuti;
+	}
+	
+	
 
 }
