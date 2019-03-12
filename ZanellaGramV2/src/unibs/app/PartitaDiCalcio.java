@@ -8,6 +8,7 @@ public class PartitaDiCalcio extends Categoria{
 	private static final String nome = "Partita di Calcio";
 	private Campo[] campiSpecifici;
 	
+	private static final String lineSeparator="\n";
 
 	public PartitaDiCalcio(Campo[] _campiGenerici, Campo[] _campiSpecifici) {
 		super(nome, descrizione, _campiGenerici);
@@ -22,11 +23,13 @@ public class PartitaDiCalcio extends Categoria{
 	
 	public String getDescrizioneCampi()
 	{
-		String descrizioneCampi = null;
-		for(int i=0; i<12; i++)  descrizioneCampi.concat(super.getCampiBase()[i].toStringValore()+ "\n") ;
-		for(int j=0; j<2; j++) descrizioneCampi.concat(campiSpecifici[j].toStringValore()+ "\n");
-		
-		return descrizioneCampi;
+		StringBuffer s = new StringBuffer();
+		s.append(super.getDescrizioneCampi());
+		for(int j=0; j<campiSpecifici.length; j++) {
+			s.append("   " + campiSpecifici[j].toStringValore());
+			s.append(lineSeparator);
+		}
+		return s.toString();
 	}
 
 	/*public void setCampiSpecifici(Campo[] campiSpecifici) {

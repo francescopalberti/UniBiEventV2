@@ -133,5 +133,13 @@ public class Categoria {
 		return (!chiuso && !fallito && !concluso);
 	}
 	
-	
+	public String getDescrizioneCampi() {
+		StringBuffer s = new StringBuffer();
+		for(int i=0; i < campiBase.length; i++) { 
+			s.append("   " + campiBase[i].toStringValore());
+			s.append(lineSeparator);
+		}
+		return s.toString();
+		
+	}
 }

@@ -167,8 +167,8 @@ public class Application {
 		int scelta= Utility.sceltaDaLista("Seleziona categoria (0 per tornare alla home)",categorie.length);
 		switch(scelta)
 		{
-			case 1: vediPartite(getPartiteDisponibili());
-					scegliPartita(getPartiteDisponibili());
+			case 1: vediEventi(getEventiDisponibili());
+					scegliEvento(getEventiDisponibili());
 				break;
 			case 0: return;
 		}
@@ -183,32 +183,24 @@ public class Application {
 		}
 	}
 	
-	private Vector<PartitaDiCalcio> getPartiteDisponibili(){
-		Vector<PartitaDiCalcio> disponibili = new Vector<PartitaDiCalcio>();
-		for(PartitaDiCalcio p:listaPartite) {
+	private Vector<Categoria> getEventiDisponibili(){
+		Vector<Categoria> disponibili = new Vector<Categoria>();
+		for(Categoria p:listaPartite) {
 			if(!mioProfilo.isPartecipante(p) && p.isAperto()) disponibili.add(p);
 		}
 		
 		return disponibili;
 	}
 	
-	public void vediPartite(Vector<PartitaDiCalcio> disponibili)
+	public void vediEventi(Vector<Categoria> disponibili)
 	{
 		for(int i=0; i<disponibili.size(); i++) { 
-			System.out.println("Partita "+ (i+1));
-			for (int j = 0; j < disponibili.get(i).getCampiBase().length; j++) {
-				System.out.println("   " + disponibili.get(i).getCampiBase()[j].toStringValore());
-			}
-			for (int j = 0; j < disponibili.get(i).getCampiSpecifici().length; j++) {
-				System.out.println("   " + disponibili.get(i).getCampiSpecifici()[j].toStringValore());
-			}
+			System.out.println(disponibili.get(i).getNome() + " " + (i+1));
+			System.out.println(disponibili.get(i).getDescrizioneCampi());
 		}
-		
-		
-		
 	}
 	
-	private void scegliPartita(Vector<PartitaDiCalcio> disponibili) {
+	private void scegliEvento(Vector<Categoria> disponibili) {
 		int a = Utility.sceltaDaLista("Seleziona partita a cui vuoi aderire (0 per uscire):", disponibili.size());
 		
 			if(a==0) return;
@@ -220,6 +212,7 @@ public class Application {
 	
 	private void visualizzaSpazioPersonale() {
 		int a;
+		if(mioProfilo.hasEventi()) mioProfilo.stampaIMieiEventi();
 		if(mioProfilo.noNotifiche()) {
 			System.out.println("NON hai notifiche da visualizzare");
 		}else {

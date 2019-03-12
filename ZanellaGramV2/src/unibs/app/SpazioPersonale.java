@@ -63,12 +63,23 @@ public class SpazioPersonale {
 			i++;
 		}
 	}
-
+	
+	public void stampaIMieiEventi() {
+		System.out.println("I MIEI EVENTI:");
+		for(int i=0; i< eventi.size(); i++) { 
+			System.out.println(eventi.get(i).getNome() + (i+1));
+			System.out.println(eventi.get(i).getDescrizioneCampi());
+		}
+	}
 
 	public int getNumeroNotifiche() {
 		return notifiche.size();
 	}
 
+	public boolean hasEventi() {
+		return eventi!=null;
+		
+	}
 
 	public boolean isPartecipante(Categoria evento) {
 		for(Categoria c: eventi)
