@@ -8,8 +8,8 @@ import java.util.Vector;
 
 public class Application {
 	//immettere percorso esatto in cui si vogliono salvare i file
-	public static String pathProfilo = "C:\\Users\\zenry\\eclipse-workspace...";
-	public static String pathPartite = "C:\\Users\\zenry\\eclipse-workspace...";
+	public static String pathProfilo = "C:\\Users\\zenry\\git\\ZanellaGramV2\\ZanellaGramV2\\data\\profilo.dat";
+	public static String pathPartite = "C:\\Users\\zenry\\git\\ZanellaGramV2\\ZanellaGramV2\\data\\partite.dat";
 	
 	private static final int TITOLO=0;
 	private static final int NUMERO_PARTECIPANTI=1;
@@ -43,24 +43,34 @@ public class Application {
 		this.oraAttuale=oraAttuale;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void initObjects() throws ClassNotFoundException, IOException {
 		campi = new Campo[14];
 		assegnaPartitaDiCalcio(campi);
 		
 		//caricamento oggetti
-		if(new File(pathProfilo).exists())mioProfilo=(SpazioPersonale)caricaOggetto(pathProfilo);
+		if(new File(pathProfilo).exists())mioProfilo=(SpazioPersonale)caricaOggetto(pathProfilo, SpazioPersonale.class);
 		else mioProfilo = new SpazioPersonale();
 		
-		if(new File(pathPartite).exists())listaPartite=(Vector<PartitaDiCalcio>)caricaOggetto(pathPartite);
+		if(new File(pathPartite).exists())listaPartite=(Vector<PartitaDiCalcio>)caricaOggetto(pathPartite, PartitaDiCalcio.class);
 		else listaPartite = new Vector<PartitaDiCalcio>();
 	}
 	
-	public Object caricaOggetto(String path) throws ClassNotFoundException, IOException
+	@SuppressWarnings("unchecked")
+	public Object caricaOggetto(String path, Class c) throws ClassNotFoundException, IOException
 	{
 		FileInputStream in = new FileInputStream(new File(path));
 		ObjectInputStream objectIn=new ObjectInputStream(in);
-		Object result=objectIn.readObject();
-		objectIn.close();
+		Object result=new Object();
+		
+		if(c==PartitaDiCalcio.class) {
+			result = (Vector<PartitaDiCalcio>) objectIn.readObject();
+			objectIn.close();
+		}
+		else if(c==SpazioPersonale.class){
+			result = (SpazioPersonale) objectIn.readObject();
+			objectIn.close();
+		}
 		return result;
 	}
 	
@@ -268,7 +278,7 @@ public class Application {
 		writerPartite.close();
 		
 		ObjectOutputStream writerProfilo=new ObjectOutputStream(new FileOutputStream(new File(pathProfilo)));
-		writerProfilo.writeObject(listaPartite);
+		writerProfilo.writeObject(mioProfilo);
 		writerProfilo.close();
 	}
 

@@ -1,6 +1,8 @@
 package unibs.app;
 
-public class Campo<T> {
+import java.io.Serializable;
+
+public class Campo<T> implements Serializable {
 	
 	private String nome;
 	private String descrizione;

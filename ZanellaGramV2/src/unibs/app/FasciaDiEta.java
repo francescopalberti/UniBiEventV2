@@ -1,7 +1,9 @@
 package unibs.app;
 
+import java.io.Serializable;
+
 //
-public class FasciaDiEta {
+public class FasciaDiEta implements Serializable {
 	
 	private Integer et‡Minima;
 	private Integer et‡Massima;

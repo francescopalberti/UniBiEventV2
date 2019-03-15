@@ -1,6 +1,8 @@
 package unibs.app;
 
-public class PartitaDiCalcio extends Categoria{
+import java.io.*;
+
+public class PartitaDiCalcio extends Categoria implements Serializable{
 	
 	private static final int GENERE=12;
 	private static final int FASCIA_DI_ETA=13;

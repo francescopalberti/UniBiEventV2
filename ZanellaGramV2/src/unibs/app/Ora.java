@@ -1,6 +1,8 @@
 package unibs.app;
 
-public class Ora {
+import java.io.Serializable;
+
+public class Ora implements Serializable{
 	
 	private Integer ora;
 	private Integer minuti;

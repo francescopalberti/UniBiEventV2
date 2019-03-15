@@ -1,6 +1,8 @@
 package unibs.app;
 
-public class Data {
+import java.io.Serializable;
+
+public class Data implements Serializable {
 	private Integer giorno, mese, anno;
 
 public Data(Integer gg, Integer mm, Integer yy) {

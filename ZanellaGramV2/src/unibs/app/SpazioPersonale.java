@@ -1,8 +1,9 @@
 package unibs.app;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-public class SpazioPersonale {
+public class SpazioPersonale implements Serializable {
 	private Vector<Categoria> eventi;
 	private Vector<String> notifiche;
 	

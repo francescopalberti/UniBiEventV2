@@ -1,9 +1,10 @@
 package unibs.app;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Vector;
 
-public class Categoria {
+public class Categoria implements Serializable {
 	private static final int TITOLO=0;
 	private static final int NUMERO_PARTECIPANTI=1;
 	private static final int TERMINE_ISCRIZIONI=2;
