@@ -141,13 +141,25 @@ public class Application {
 			   case TERMINE_ISCRIZIONI:
 			   case DATA:
 			   case DATA_CONCLUSIVA:
-				   Data date = new Data(Utility.leggiIntero("\nGiorno"), Utility.leggiIntero("Mese"), Utility.leggiIntero("Anno"));
+				   Boolean formatoDataErrato=false;
+				   Data date;
+				   do {
+				   date = new Data(Utility.leggiIntero("\nGiorno"), Utility.leggiIntero("Mese"), Utility.leggiIntero("Anno"));
+				   formatoDataErrato=!date.controlloData();
+				   if (formatoDataErrato) System.out.println("Hai inserito una data nel formato errato!");
+				   } while(formatoDataErrato);
 				   campi[i].setValore(date);
 				      break;
 			   case ORA:
 			   case DURATA:
 			   case ORA_CONCLUSIVA:
-				   Ora orario = new Ora(Utility.leggiIntero("\nOra"), Utility.leggiIntero("Minuti"));
+				   Boolean formatoOraErrato=false;
+				   Ora orario;
+				   do {
+					   orario = new Ora(Utility.leggiIntero("\nOra"), Utility.leggiIntero("Minuti"));
+					   formatoOraErrato=!orario.controlloOra();
+				   if (formatoOraErrato) System.out.println("Hai inserito un orario nel formato errato!");
+				   } while(formatoOraErrato);
 				   campi[i].setValore(orario);
 				      break;
 			}

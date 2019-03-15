@@ -33,6 +33,9 @@ public class Ora implements Serializable{
 		return ora + ":" + minuti;
 	}
 	
+	public boolean controlloOra() {
+		return ora<=23 && minuti<=59;
+	}
 	
 
 }

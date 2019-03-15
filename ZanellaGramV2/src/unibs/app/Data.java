@@ -49,6 +49,35 @@ public Data(Integer gg, Integer mm, Integer yy) {
 		return giorno + "/" + mese + "/" + anno;
 	}
 	
+	public boolean controlloData() {
+		if(anno<2019) return false;
+		else {
+			switch (mese) {
+				case 2:
+					if(giorno>29) return false;
+					break;
+				case 4:
+				case 6:
+				case 10:
+				case 11:
+					if(giorno>30) return false;
+					break;
+				case 1:
+				case 3:
+				case 5:
+				case 7:
+				case 8:
+				case 9:
+				case 12:
+					if (giorno>31) return false;
+					break;
+				default:
+					return false;
+			}
+		}
+		return true;
+	}
+	
 	
 	
 }
