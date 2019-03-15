@@ -7,7 +7,7 @@ import java.util.Vector;
 
 
 public class Application {
-	//immettere percorso esatto in cui si vogliono salvare i file
+	
 	public static String pathProfilo = "C:\\Users\\zenry\\git\\ZanellaGramV2\\ZanellaGramV2\\data\\profilo.dat";
 	public static String pathPartite = "C:\\Users\\zenry\\git\\ZanellaGramV2\\ZanellaGramV2\\data\\partite.dat";
 	
@@ -34,6 +34,7 @@ public class Application {
 	private String titoloMain = "HOME";
 	private Vector<PartitaDiCalcio> listaPartite;
 	private String[] vociMain = {"Esci e salva","Vedi eventi", "Crea evento", "Vedi profilo"};
+	private String[] vociSpazioPersonale = {"Esci","Vedi eventi a cui sono iscritto","Vedi notifiche"};
 	
 	private Campo[] campi;
 	
@@ -233,8 +234,29 @@ public class Application {
 	}
 	
 	private void visualizzaSpazioPersonale() {
+		boolean fine=false;
+		do {
+			int i = Utility.scegli("SPAZIO PERSONALE",vociSpazioPersonale,"Seleziona una voce",3);
+			switch(i) {
+				case 0:fine=true;
+					break;
+				case 1:
+					if(mioProfilo.hasEventi()) mioProfilo.stampaIMieiEventi();
+					fine=true;
+					break;
+				case 2:
+					gestioneNotifiche();
+					fine=true;
+					break;
+				default: System.out.println("Scelta non valida!");
+					break;
+			
+				}
+		}while(!fine);
+	}
+		
+	public void gestioneNotifiche() {
 		int a;
-		if(mioProfilo.hasEventi()) mioProfilo.stampaIMieiEventi();
 		if(mioProfilo.noNotifiche()) {
 			System.out.println("NON hai notifiche da visualizzare");
 		}else {
