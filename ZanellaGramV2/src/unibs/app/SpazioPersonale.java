@@ -78,7 +78,7 @@ public class SpazioPersonale implements Serializable {
 	}
 
 	public boolean hasEventi() {
-		return eventi!=null;
+		return eventi.size()!=0;
 		
 	}
 
