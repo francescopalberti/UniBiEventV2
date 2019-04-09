@@ -20,6 +20,7 @@ public class Categoria implements Serializable {
 	
 	private static final String lineSeparator="\n";
 	
+	
 	private String nome;
 	private String descrizione;
 	private Boolean chiuso;
