@@ -50,15 +50,18 @@ public class Categoria implements Serializable {
 	public String getDescrizione() {
 		return descrizione;
 	}
+	
+	public String getStato() {
+		if(chiuso) return "Chiuso";
+		if(concluso) return "Concluso";
+		if(fallito) return "Fallito";
+		return "Aperto";
+	}
 
 	
 	public Campo[] getCampiBase() {
 		return campiBase;
 	}
-
-	/*public void setCampiBase(Campo[] campiBase) {
-		this.campiBase = campiBase;
-	}*/
 	
 	public String toString() {
 		
@@ -73,8 +76,23 @@ public class Categoria implements Serializable {
 		
 		
 	}
+	
+	public void aggiornaStato(Data dataOdierna) {
+		if(isAperto()) {
+			checkFallimento(dataOdierna);
+			checkConclusione(dataOdierna);
+			checkChiusura(dataOdierna);
+		}	
 
-	private void controlloChiusura() {
+	}
+	
+	public void removePartecipante(SpazioPersonale rimosso) {
+		partecipantiAttuali--;
+		listaPartecipanti.remove(rimosso);
+	}
+	
+	
+	private void checkChiusura(Data dataOdierna) {
 		if (partecipantiAttuali>=(int)campiBase[NUMERO_PARTECIPANTI].getValore()) {
 			chiuso=true;	
 			for (SpazioPersonale profilo : listaPartecipanti) {
@@ -83,10 +101,8 @@ public class Categoria implements Serializable {
 		}
 		
 	}
-	
-	public boolean aggiornaStato(Data dataOdierna) {
-		controlloChiusura();
-		
+
+	public void checkFallimento(Data dataOdierna) {
 		Data dataScadenza = (Data) campiBase[TERMINE_ISCRIZIONI].getValore();
 		if (dataScadenza.isPrecedente(dataOdierna) && (partecipantiAttuali < (int) campiBase[NUMERO_PARTECIPANTI].getValore())) {
 			fallito=true;
@@ -94,7 +110,9 @@ public class Categoria implements Serializable {
 				profilo.addNotifica(infoFallimento());
 			}
 		}
-		
+	}
+	
+	public void checkConclusione(Data dataOdierna) {
 		Data dataConclusiva;
 		if (campiBase[DATA_CONCLUSIVA].getValore()!=null) {
 			dataConclusiva = (Data) campiBase[DATA_CONCLUSIVA].getValore();
@@ -105,7 +123,6 @@ public class Categoria implements Serializable {
 		if (dataConclusiva.isPrecedente(dataOdierna) && !fallito) {
 			concluso=true;
 		}
-		return concluso || fallito || chiuso;
 	}
 	
 	private String infoFallimento() {
@@ -134,7 +151,7 @@ public class Categoria implements Serializable {
 		return (!chiuso && !fallito && !concluso);
 	}
 	
-	public String getDescrizioneCampi() {
+	public String getCampiCompilati() {
 		StringBuffer s = new StringBuffer();
 		for(int i=0; i < campiBase.length; i++) { 
 			s.append("   " + campiBase[i].toStringValore());

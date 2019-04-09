@@ -69,7 +69,7 @@ public class SpazioPersonale implements Serializable {
 		System.out.println("I MIEI EVENTI:");
 		for(int i=0; i< eventi.size(); i++) { 
 			System.out.println(eventi.get(i).getNome() + (i+1));
-			System.out.println(eventi.get(i).getDescrizioneCampi());
+			System.out.println(eventi.get(i).getCampiCompilati());
 		}
 	}
 

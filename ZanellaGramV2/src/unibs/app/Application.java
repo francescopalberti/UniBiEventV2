@@ -1,15 +1,11 @@
 package unibs.app;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Vector;
+import java.util.*;
 
 
-public class Application {
+public class Application implements Serializable {
 	
-	public static String pathProfilo = "C:\\Users\\zenry\\git\\ZanellaGramV2\\ZanellaGramV2\\data\\profilo.dat";
-	public static String pathPartite = "C:\\Users\\zenry\\git\\ZanellaGramV2\\ZanellaGramV2\\data\\partite.dat";
 	
 	private static final int TITOLO=0;
 	private static final int NUMERO_PARTECIPANTI=1;
@@ -38,56 +34,28 @@ public class Application {
 	
 	private Campo[] campi;
 	
-	public Application(Data dataOdierna, Ora oraAttuale) throws ClassNotFoundException, IOException {
+	public Application() throws ClassNotFoundException, IOException {
 		initObjects();
-		this.dataOdierna=dataOdierna;
-		this.oraAttuale=oraAttuale;
 	}
 
 	@SuppressWarnings("unchecked")
 	private void initObjects() throws ClassNotFoundException, IOException {
-		campi = new Campo[14];
-		assegnaPartitaDiCalcio(campi);
-		
-		//caricamento oggetti
-		if(new File(pathProfilo).exists())mioProfilo=(SpazioPersonale)caricaOggetto(pathProfilo, SpazioPersonale.class);
-		else mioProfilo = new SpazioPersonale();
-		
-		if(new File(pathPartite).exists())listaPartite=(Vector<PartitaDiCalcio>)caricaOggetto(pathPartite, PartitaDiCalcio.class);
-		else listaPartite = new Vector<PartitaDiCalcio>();
+		mioProfilo = new SpazioPersonale();
+		listaPartite = new Vector<PartitaDiCalcio>();
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Object caricaOggetto(String path, Class c) throws ClassNotFoundException, IOException
-	{
-		FileInputStream in = new FileInputStream(new File(path));
-		ObjectInputStream objectIn=new ObjectInputStream(in);
-		Object result=new Object();
-		
-		if(c==PartitaDiCalcio.class) {
-			result = (Vector<PartitaDiCalcio>) objectIn.readObject();
-			objectIn.close();
-		}
-		else if(c==SpazioPersonale.class){
-			result = (SpazioPersonale) objectIn.readObject();
-			objectIn.close();
-		}
-		return result;
-	}
-	
-	
-	
-	public void runApplication() throws IOException {
-		controlloEventi();
+	public void runApplication(Data dataOdierna, Ora oraAttuale) throws IOException {
+		this.dataOdierna=dataOdierna;
+		this.oraAttuale=oraAttuale;
 		boolean fine=false;
 		while(!fine)
 		{	
+			System.out.println("\nUniBiEvent V2.0");
 			int i = Utility.scegli(titoloMain,vociMain,"Seleziona una voce",4);
 			switch(i) {
-				case 0: {fine=true;
-					esciEsalva();}
+				case 0: fine=true;
 					break;
-				case 1:vediEventi();
+				case 1:vediCategorie();
 					break;
 				case 2:creaEvento();
 					break;
@@ -102,13 +70,12 @@ public class Application {
 
 
 	private void controlloEventi() {
-		for (Categoria evento : listaPartite) {
-			if(evento.aggiornaStato(dataOdierna)) listaPartite.remove(evento);
-		}
+		for (Categoria evento : listaPartite) 
+			evento.aggiornaStato(dataOdierna);
 	}
 
 	private void creaEvento() {
-		vediCategorie();
+		stampaCategorie();
 		int scelta= Utility.sceltaDaLista("Seleziona categoria (0 per tornare alla home)",categorie.length);
 		switch(scelta)
 		{
@@ -120,13 +87,15 @@ public class Application {
 	
 	
 	private void creaPartita() {
+		Campo [] campi = new Campo[14];
+		assegnaPartitaDiCalcio(campi);
 		for (int i = 0; i < campi.length; i++) {
 			System.out.print(campi[i].toString());
 			switch (i)
 			{
 			   case NUMERO_PARTECIPANTI:
 			   case QUOTA:
-			      campi[i].setValore(Utility.leggiIntero(""));
+				   campi[i].setValore(Utility.leggiInteroOpzionale(""));
 			      break;
 			   case TITOLO:
 			   case LUOGO:
@@ -136,36 +105,62 @@ public class Application {
 				   campi[i].setValore(Utility.leggiStringa(""));
 			      break;
 			   case FASCIA_DI_ETA:
-				   FasciaDiEta fascia = new FasciaDiEta(Utility.leggiIntero("\nEtà min"), Utility.leggiIntero("Età max"));
-				   campi[i].setValore(fascia);
-				      break;
+				   Integer min=Utility.leggiInteroOpzionale("\nEtà min");
+				   Integer max=Utility.leggiInteroOpzionale("Età max");
+				   if(!(min==null && max==null)) {
+					   FasciaDiEta fascia = new FasciaDiEta(min, max);
+					   campi[i].setValore(fascia);	
+				   }
+				  break;
 			   case TERMINE_ISCRIZIONI:
 			   case DATA:
 			   case DATA_CONCLUSIVA:
 				   Boolean formatoDataErrato=false;
+				   Boolean incoerenzaData=false;
 				   Data date;
+				   Integer gg, mm, aa;
 				   do {
-				   date = new Data(Utility.leggiIntero("\nGiorno"), Utility.leggiIntero("Mese"), Utility.leggiIntero("Anno"));
-				   formatoDataErrato=!date.controlloData();
-				   if (formatoDataErrato) System.out.println("Hai inserito una data nel formato errato!");
-				   } while(formatoDataErrato);
-				   campi[i].setValore(date);
+					   gg=Utility.leggiInteroOpzionale("\nGiorno");
+					   mm=Utility.leggiInteroOpzionale("Mese");
+					   aa=Utility.leggiInteroOpzionale("Anno");
+					   if(gg==null && mm==null && aa==null) {
+						   date=null;
+						   formatoDataErrato=false;
+					   }
+					   else {
+						   date = new Data(gg, mm, aa);
+						   formatoDataErrato=!date.controlloData();
+						   incoerenzaData=date.isPrecedente(dataOdierna);
+						   if (formatoDataErrato) System.out.println("Hai inserito una data nel formato errato!");
+						   else if(incoerenzaData) System.out.println("Hai inserito una data già passata!");   
+						   else campi[i].setValore(date);
+					   }
+				   } while(formatoDataErrato || incoerenzaData);
 				      break;
 			   case ORA:
 			   case DURATA:
 			   case ORA_CONCLUSIVA:
 				   Boolean formatoOraErrato=false;
 				   Ora orario;
+				   Integer ora,minuti;
 				   do {
-					   orario = new Ora(Utility.leggiIntero("\nOra"), Utility.leggiIntero("Minuti"));
-					   formatoOraErrato=!orario.controlloOra();
-				   if (formatoOraErrato) System.out.println("Hai inserito un orario nel formato errato!");
+					   ora=Utility.leggiInteroOpzionale("\nOra");
+					   minuti=Utility.leggiInteroOpzionale("Minuti");
+					   if(ora==null && minuti==null) {
+						   orario=null;
+						   formatoOraErrato=false;
+					   }
+					   else {
+						   orario = new Ora(ora, minuti);
+						   formatoOraErrato=!orario.controlloOra();
+						   if (formatoOraErrato) System.out.println("Hai inserito un orario nel formato errato!");
+						   else campi[i].setValore(orario);
+					   }
 				   } while(formatoOraErrato);
-				   campi[i].setValore(orario);
-				      break;
+			   		break;
 			}
 		}
-		if(controlloCompilazione()){
+		if(controlloCompilazione(campi)){
 			PartitaDiCalcio unaPartita = new PartitaDiCalcio(Arrays.copyOfRange(campi, 0, 11), Arrays.copyOfRange(campi, 12, 13));
 			listaPartite.add(unaPartita);
 			mioProfilo.addEvento(unaPartita);
@@ -174,7 +169,7 @@ public class Application {
 		}
 	}
 	
-	public Boolean controlloCompilazione() {
+	public Boolean controlloCompilazione(Campo [] campi) {
 		for (int i = 0; i < campi.length; i++) {
 			if(campi[i].isObbligatorio()) {
 				if(campi[i].getValore()==null) return false;
@@ -184,9 +179,9 @@ public class Application {
 		
 	}
 
-	public void vediEventi()
+	public void vediCategorie()
 	{
-		vediCategorie();
+		stampaCategorie();
 		int scelta= Utility.sceltaDaLista("Seleziona categoria (0 per tornare alla home)",categorie.length);
 		switch(scelta)
 		{
@@ -199,7 +194,7 @@ public class Application {
 	
 	
 
-	public void vediCategorie()
+	public void stampaCategorie()
 	{
 		for (int i = 0; i < categorie.length; i++) {
 			System.out.println(i+1 + ") " + categorie[i]);
@@ -208,10 +203,8 @@ public class Application {
 	
 	private Vector<Categoria> getEventiDisponibili(){
 		Vector<Categoria> disponibili = new Vector<Categoria>();
-		for(Categoria p:listaPartite) {
-			if(!mioProfilo.isPartecipante(p) && p.isAperto()) disponibili.add(p);
-		}
-		
+			for(Categoria p:listaPartite) 
+				if(!(mioProfilo.isPartecipante(p)) && p.isAperto()) disponibili.add(p);		
 		return disponibili;
 	}
 	
@@ -219,7 +212,7 @@ public class Application {
 	{
 		for(int i=0; i<disponibili.size(); i++) { 
 			System.out.println(disponibili.get(i).getNome() + " " + (i+1));
-			System.out.println(disponibili.get(i).getDescrizioneCampi());
+			System.out.println(disponibili.get(i).getCampiCompilati());
 		}
 	}
 	
@@ -257,18 +250,20 @@ public class Application {
 		
 	public void gestioneNotifiche() {
 		int a;
-		if(mioProfilo.noNotifiche()) {
-			System.out.println("NON hai notifiche da visualizzare");
-		}else {
-			mioProfilo.stampaNotifiche();
-			do {
+		Boolean fine=false;
+		do {
+			if(mioProfilo.noNotifiche()) {
+				System.out.println("NON hai notifiche da visualizzare");
+				fine=true;
+			}else {
+				mioProfilo.stampaNotifiche();
 				a = Utility.sceltaDaLista("Seleziona notifica che vuoi eliminare (0 per uscire):", mioProfilo.getNumeroNotifiche());
-				if(a==0) return;
+				if(a==0) fine=true;
 				else{
 					mioProfilo.deleteNotifica(a-1); 
 				}
-			}while(a!=0);
-		}
+			}
+		}while(!fine);
 	}
 	
 	private void partecipaEvento(Categoria evento) {
@@ -302,19 +297,5 @@ public class Application {
 		campi[FASCIA_DI_ETA]=new Campo<FasciaDiEta>("Fascia di età","Indica la fascia di età dei giocatori",true);
 		
 	}
-	
-	public void esciEsalva() throws IOException
-	{
-		System.out.println("Salvataggio...");
-		
-		ObjectOutputStream writerPartite=new ObjectOutputStream(new FileOutputStream(new File(pathPartite)));
-		writerPartite.writeObject(listaPartite);
-		writerPartite.close();
-		
-		ObjectOutputStream writerProfilo=new ObjectOutputStream(new FileOutputStream(new File(pathProfilo)));
-		writerProfilo.writeObject(mioProfilo);
-		writerProfilo.close();
-	}
-
 		
 }
